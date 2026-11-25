@@ -1,0 +1,184 @@
+services:
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: zelvira-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-zelvira}
+      POSTGRES_USER: ${POSTGRES_USER:-rizaldi}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-15031996}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rizaldi} -d ${POSTGRES_DB:-zelvira}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 768M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - zelvira-backend-network
+
+  redis:
+    image: redis:alpine
+    container_name: zelvira-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save ""
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    networks:
+      - zelvira-backend-network
+
+  minio:
+    image: pgsty/minio:latest
+    container_name: zelvira-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_SERVER_URL: ${MINIO_URL:-https://minio.zelvira.my.id}
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 128M
+    networks:
+      - zelvira-backend-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zelvira-backend
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx768m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-zelvira}
+      DB_USERNAME: ${POSTGRES_USER:-rizaldi}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-zelvira}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-rizaldi}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
+      MINIO_URL: ${MINIO_URL:-http://minio:9000}
+      MINIO_PUBLIC_URL: ${NEXT_PUBLIC_STORAGE_URL:-https://minio.zelvira.my.id}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_BUCKET: ${MINIO_BUCKET:-zelixa-bucket}
+      ZENZIVA_URL: ${ZENZIVA_URL:-https://console.zenziva.net/waofficial/api/sendWAOfficial/}
+      ZENZIVA_USERKEY: ${ZENZIVA_USERKEY}
+      ZENZIVA_PASSKEY: ${ZENZIVA_PASSKEY}
+      ZENZIVA_BRAND: ${ZENZIVA_BRAND:-Zelvira}
+      FIREBASE_CONFIG_PATH: ${FIREBASE_CONFIG_PATH:-firebase-service-account.json}
+      APP_ADMIN_INITIAL_PASSWORD: ${APP_ADMIN_INITIAL_PASSWORD:-password}
+      MAIL_HOST: ${MAIL_HOST:-mail.zelvira.my.id}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-noreply@zelvira.my.id}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_FROM: ${MAIL_FROM:-noreply@zelvira.my.id}
+      MAIL_SENDER_NAME: ${MAIL_SENDER_NAME:-Zelixa Official}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-https://api.zelvira.my.id/api/v1/auth/google/callback}
+      NEXT_PUBLIC_WEB_URL: ${NEXT_PUBLIC_WEB_URL:-https://zelvira.my.id}
+      LINKEDIN_CLIENT_ID: ${LINKEDIN_CLIENT_ID}
+      LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET}
+      LINKEDIN_ORGANIZATION_ID: ${LINKEDIN_ORGANIZATION_ID:-}
+      LINKEDIN_REDIRECT_URI: ${LINKEDIN_REDIRECT_URI:-https://api.zelvira.my.id/api/v1/social/callback/linkedin}
+      INSTAGRAM_APP_ID: ${INSTAGRAM_APP_ID:-1178932708147074}
+      INSTAGRAM_APP_SECRET: ${INSTAGRAM_APP_SECRET:-5430b9b475b147598bbad2fc452447fa}
+      INSTAGRAM_CONFIG_ID: ${INSTAGRAM_CONFIG_ID:-1482133923808500}
+      INSTAGRAM_REDIRECT_URI: ${INSTAGRAM_REDIRECT_URI:-https://api.zelvira.my.id/api/v1/callbacks/instagram/oauth}
+      INSTAGRAM_SOCIAL_REDIRECT_URI: ${INSTAGRAM_SOCIAL_REDIRECT_URI:-https://api.zelvira.my.id/api/v1/social/callback/instagram}
+      META_APP_ID: ${META_APP_ID:-1178932708147074}
+      META_APP_SECRET: ${META_APP_SECRET:-5430b9b475b147598bbad2fc452447fa}
+      FACEBOOK_REDIRECT_URI: ${FACEBOOK_REDIRECT_URI:-https://api.zelvira.my.id/api/v1/social/callback/facebook}
+      THREADS_APP_ID: ${THREADS_APP_ID:-1100121756212184}
+      THREADS_APP_SECRET: ${THREADS_APP_SECRET:-a2e05c4f4d61cbdd9a2a27d212e4f049}
+      THREADS_REDIRECT_URI: ${THREADS_REDIRECT_URI:-https://api.zelvira.my.id/api/v1/social/callback/threads}
+      TIKTOK_APP_KEY: ${TIKTOK_APP_KEY:-6llmr75bjccch}
+      TIKTOK_APP_SECRET: ${TIKTOK_APP_SECRET:-1f1f4fbad8007d7bdcdc58462eabd0bf3b98dab0}
+      TIKTOK_AUTH_URL: ${TIKTOK_AUTH_URL:-https://auth.tiktok-shops.com/oauth/authorize}
+      TIKTOK_API_BASE_URL: ${TIKTOK_API_BASE_URL:-https://open-api.tiktokglobalshop.com}
+      TIKTOK_SOCIAL_CLIENT_KEY: ${TIKTOK_SOCIAL_CLIENT_KEY:-sbawknsk6eooabz8hq}
+      TIKTOK_SOCIAL_CLIENT_SECRET: ${TIKTOK_SOCIAL_CLIENT_SECRET:-7wWIblGTNxGUS0OoC01HdMd6pETdEt1g}
+      TIKTOK_SOCIAL_REDIRECT_URI: ${TIKTOK_SOCIAL_REDIRECT_URI:-https://api.zelvira.my.id/api/v1/social/callback/tiktok}
+      NVIDIA_API_KEY: ${NVIDIA_API_KEY}
+      NVIDIA_BASE_URL: ${NVIDIA_BASE_URL:-https://integrate.api.nvidia.com/v1}
+      NVIDIA_MODEL: ${NVIDIA_MODEL:-nvidia/nemotron-3.5-super-vl-120b-a12b}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:8081/api/v1/products >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1280M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - zelvira-backend-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+
+networks:
+  zelvira-backend-network:
+    driver: bridge
+    name: zelvira-backend-network

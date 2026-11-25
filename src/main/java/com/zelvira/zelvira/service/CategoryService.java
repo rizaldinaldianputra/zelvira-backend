@@ -1,0 +1,73 @@
+package com.zelvira.zelvira.service;
+
+import com.zelvira.zelvira.entity.Category;
+import com.zelvira.zelvira.repository.CategoryRepository;
+import com.zelvira.zelvira.util.SlugUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+@Service
+public class CategoryService {
+
+    private final CategoryRepository categoryRepository;
+
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
+    public Page<Category> getAllCategories(Pageable pageable) {
+        return categoryRepository.findAll(pageable);
+    }
+
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id).orElse(null);
+    }
+
+    public Category createCategory(Category category) {
+        if (category.getPointsReward() == null) {
+            category.setPointsReward(0L);
+        }
+        if (category.getSlug() == null || category.getSlug().trim().isEmpty()) {
+            String slug = SlugUtils.makeSlug(category.getName());
+            if (categoryRepository.existsBySlug(slug)) {
+                slug = slug + "-" + java.util.UUID.randomUUID().toString().substring(0, 5);
+            }
+            category.setSlug(slug);
+        }
+        return categoryRepository.save(category);
+    }
+
+    public Category updateCategory(Long id, Category category) {
+        Category existing = categoryRepository.findById(id).orElse(null);
+        if (existing != null) {
+            existing.setName(category.getName());
+            if (category.getSlug() != null && !category.getSlug().trim().isEmpty()) {
+                existing.setSlug(category.getSlug());
+            }
+            existing.setDescription(category.getDescription());
+            existing.setImageUrl(category.getImageUrl());
+            if (category.getIsActive() != null) {
+                existing.setIsActive(category.getIsActive());
+            }
+            if (category.getPointsReward() != null) {
+                existing.setPointsReward(category.getPointsReward());
+            }
+            return categoryRepository.save(existing);
+        }
+        category.setId(id);
+        if (category.getPointsReward() == null) {
+            category.setPointsReward(0L);
+        }
+        return categoryRepository.save(category);
+    }
+
+    public void deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
+    }
+}

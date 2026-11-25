@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                  id="Definitions_Procurement" 
+                  targetNamespace="http://bpmn.io/schema/bpmn" 
+                  exporter="Camunda Modeler" 
+                  exporterVersion="5.22.1">
+  <bpmn:process id="procurement-po-process" name="Procurement PO Approval Process" isExecutable="true" camunda:historyTimeToLive="P30D">
+    <bpmn:startEvent id="StartEvent_PO_Created" name="PO Created (DRAFT)">
+      <bpmn:outgoing>Flow_To_Review</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_To_Review" sourceRef="StartEvent_PO_Created" targetRef="Activity_PO_Approval" />
+    <bpmn:userTask id="Activity_PO_Approval" name="Review and Approve Purchase Order" camunda:candidateGroups="ADMIN,PROCUREMENT">
+      <bpmn:incoming>Flow_To_Review</bpmn:incoming>
+      <bpmn:outgoing>Flow_To_Decision</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_PO_Decision" name="Approved?">
+      <bpmn:incoming>Flow_To_Decision</bpmn:incoming>
+      <bpmn:outgoing>Flow_Approved</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Rejected</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_To_Decision" sourceRef="Activity_PO_Approval" targetRef="Gateway_PO_Decision" />
+    <bpmn:sequenceFlow id="Flow_Approved" name="Yes" sourceRef="Gateway_PO_Decision" targetRef="EndEvent_PO_Approved">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isApproved == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Rejected" name="No" sourceRef="Gateway_PO_Decision" targetRef="EndEvent_PO_Rejected">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isApproved == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EndEvent_PO_Approved" name="PO Approved (Ready for Goods Receipt)">
+      <bpmn:incoming>Flow_Approved</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_PO_Rejected" name="PO Cancelled / Rejected">
+      <bpmn:incoming>Flow_Rejected</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Procurement">
+    <bpmndi:BPMNPlane id="BPMNPlane_Procurement" bpmnElement="procurement-po-process">
+      <bpmndi:BPMNShape id="StartEvent_PO_di" bpmnElement="StartEvent_PO_Created">
+        <dc:Bounds x="180" y="160" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_PO_Approval_di" bpmnElement="Activity_PO_Approval">
+        <dc:Bounds x="280" y="138" width="160" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_PO_Decision_di" bpmnElement="Gateway_PO_Decision" isMarkerVisible="true">
+        <dc:Bounds x="500" y="153" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_PO_Approved_di" bpmnElement="EndEvent_PO_Approved">
+        <dc:Bounds x="640" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_PO_Rejected_di" bpmnElement="EndEvent_PO_Rejected">
+        <dc:Bounds x="640" y="220" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_To_Review_di" bpmnElement="Flow_To_Review">
+        <di:waypoint x="216" y="178" />
+        <di:waypoint x="280" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_Decision_di" bpmnElement="Flow_To_Decision">
+        <di:waypoint x="440" y="178" />
+        <di:waypoint x="500" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Approved_di" bpmnElement="Flow_Approved">
+        <di:waypoint x="525" y="153" />
+        <di:waypoint x="525" y="118" />
+        <di:waypoint x="640" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Rejected_di" bpmnElement="Flow_Rejected">
+        <di:waypoint x="525" y="203" />
+        <di:waypoint x="525" y="238" />
+        <di:waypoint x="640" y="238" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

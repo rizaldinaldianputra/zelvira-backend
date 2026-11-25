@@ -1,0 +1,60 @@
+package com.zelvira.zelvira.controller;
+
+import com.zelvira.zelvira.entity.User;
+import com.zelvira.zelvira.repository.UserRepository;
+import com.zelvira.zelvira.service.OrderWorkflowService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/workflow/orders/tasks")
+public class OrderWorkflowController {
+
+    private final OrderWorkflowService workflowService;
+    private final UserRepository userRepository;
+
+    public OrderWorkflowController(OrderWorkflowService workflowService, UserRepository userRepository) {
+        this.workflowService = workflowService;
+        this.userRepository = userRepository;
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<List<Map<String, Object>>> getAdminTasks(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+        User user = userRepository.findByEmail(authentication.getName()).orElse(null);
+        List<String> groups = new ArrayList<>();
+        if (user != null && user.getTaskGroup() != null) {
+            groups.add(user.getTaskGroup());
+        }
+        // Include default and administrative candidate groups defined in BPMN
+        groups.add("ADMIN");
+        groups.add("ORDER_PROCESSOR");
+        groups.add("SHIPPING");
+        groups.add("CUSTOMER_SERVICE");
+
+        return ResponseEntity.ok(workflowService.getTasksByGroups(groups));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<Map<String, Object>>> getUserTasks(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+        return ResponseEntity.ok(workflowService.getUserTasks(authentication.getName()));
+    }
+
+    @PostMapping("/{taskId}/complete")
+    public ResponseEntity<Void> completeTask(
+            @PathVariable String taskId,
+            @RequestBody Map<String, Object> variables) {
+        workflowService.completeTask(taskId, variables);
+        return ResponseEntity.ok().build();
+    }
+}
