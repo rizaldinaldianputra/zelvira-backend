@@ -19,13 +19,15 @@ services:
       SPRING_DATASOURCE_PASSWORD: "15031996"
       REDIS_HOST: ${REDIS_HOST:-zelvira-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-15031996}
       SPRING_DATA_REDIS_HOST: ${REDIS_HOST:-zelvira-redis}
       SPRING_DATA_REDIS_PORT: ${REDIS_PORT:-6379}
+      SPRING_DATA_REDIS_PASSWORD: ${REDIS_PASSWORD:-15031996}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://zelvira-minio:9000}
       MINIO_URL: ${MINIO_URL:-http://zelvira-minio:9000}
-      MINIO_PUBLIC_URL: ${NEXT_PUBLIC_STORAGE_URL:-https://minio.zelvira.co.id}
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:-https://s3.zelvira.co.id}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-zelvira}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-15031996}
       MINIO_BUCKET: ${MINIO_BUCKET:-zelixa-bucket}
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O - http://localhost:8081/api/v1/products >/dev/null 2>&1 || exit 1"]
