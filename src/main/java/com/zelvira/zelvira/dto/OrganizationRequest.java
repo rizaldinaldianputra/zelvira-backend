@@ -23,5 +23,10 @@ public class OrganizationRequest {
     private String appstoreUrl;
     private Double latitude;
     private Double longitude;
+    private String originProvinceId;
+    private String originCityId;
+    private String originDistrictId;
+    private String originSubdistrictId;
+    private String originLocationName;
     private String logoUrl;
 }

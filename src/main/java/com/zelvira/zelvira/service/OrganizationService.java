@@ -42,6 +42,11 @@ public class OrganizationService {
         organization.setAppstoreUrl(request.getAppstoreUrl());
         organization.setLatitude(request.getLatitude());
         organization.setLongitude(request.getLongitude());
+        organization.setOriginProvinceId(request.getOriginProvinceId());
+        organization.setOriginCityId(request.getOriginCityId());
+        organization.setOriginDistrictId(request.getOriginDistrictId());
+        organization.setOriginSubdistrictId(request.getOriginSubdistrictId());
+        organization.setOriginLocationName(request.getOriginLocationName());
         organization.setLogoUrl(request.getLogoUrl());
 
         return organizationRepository.save(organization);

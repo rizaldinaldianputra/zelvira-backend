@@ -58,6 +58,21 @@ public class Organization {
     private Double latitude;
     private Double longitude;
 
+    @Column(name = "origin_province_id", length = 50)
+    private String originProvinceId;
+
+    @Column(name = "origin_city_id", length = 50)
+    private String originCityId;
+
+    @Column(name = "origin_district_id", length = 50)
+    private String originDistrictId;
+
+    @Column(name = "origin_subdistrict_id", length = 50)
+    private String originSubdistrictId;
+
+    @Column(name = "origin_location_name", length = 255)
+    private String originLocationName;
+
     @Column(name = "logo_url", length = 500)
     private String logoUrl;
 

@@ -2,6 +2,7 @@ package com.zelvira.zelvira.controller;
 
 import com.zelvira.zelvira.dto.ShippingCourierResponse;
 import com.zelvira.zelvira.dto.ApiResponse;
+import com.zelvira.zelvira.service.OrganizationService;
 import com.zelvira.zelvira.service.ShippingService;
 import com.zelvira.zelvira.entity.Location;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,11 @@ import java.util.Map;
 public class ShippingController {
 
     private final ShippingService shippingService;
+    private final OrganizationService organizationService;
 
-    public ShippingController(ShippingService shippingService) {
+    public ShippingController(ShippingService shippingService, OrganizationService organizationService) {
         this.shippingService = shippingService;
+        this.organizationService = organizationService;
     }
 
     @GetMapping("/provinces")
@@ -65,7 +68,13 @@ public class ShippingController {
     @PostMapping("/cost")
     public ResponseEntity<ApiResponse<List<ShippingCourierResponse>>> calculateCost(
             @RequestBody Map<String, Object> payload) {
-        String origin = payload.get("origin").toString();
+        String origin = payload.get("origin") != null ? payload.get("origin").toString() : "";
+        if (origin.isBlank() || "1391".equals(origin)) {
+            var org = organizationService.getOrganization();
+            if (org != null && org.getOriginSubdistrictId() != null && !org.getOriginSubdistrictId().isBlank()) {
+                origin = org.getOriginSubdistrictId();
+            }
+        }
         String destination = payload.get("destination").toString();
         int weight = Integer.parseInt(payload.get("weight").toString());
         String courier = payload.get("courier").toString();
