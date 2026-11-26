@@ -165,10 +165,10 @@ public class SecurityConfig {
                 "http://127.0.0.1:3002",
                 "http://127.0.0.1:3003",
                 "https://zelvira.co.id",
+                "https://store.zelvira.co.id",
                 "https://lawfirm.zelvira.co.id",
                 "https://admin.zelvira.co.id",
-                "https://admin.zelvira.co.id",
-                "https://zelvira.co.id",
+                "https://s3.zelvira.co.id",
                 "https://minio.zelvira.co.id",
                 "https://storage.zelvira.co.id"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
