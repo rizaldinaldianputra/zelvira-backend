@@ -59,7 +59,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
                 : "7wWIblGTNxGUS0OoC01HdMd6pETdEt1g";
     }
 
-    @Value("${app.social.tiktok.redirect-uri:https://api.zelvira.my.id/api/v1/social/callback/tiktok}")
+    @Value("${app.social.tiktok.redirect-uri:https://api.zelvira.co.id/api/v1/social/callback/tiktok}")
     private String tiktokRedirectUri;
 
     @Value("${app.instagram.app-id:${META_APP_ID:1178932708147074}}")
@@ -77,7 +77,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
     @Value("${app.instagram.account-username:zelviraofficialstore}")
     private String instagramDefaultUsername;
 
-    @Value("${app.social.instagram.redirect-uri:https://api.zelvira.my.id/api/v1/social/callback/instagram}")
+    @Value("${app.social.instagram.redirect-uri:https://api.zelvira.co.id/api/v1/social/callback/instagram}")
     private String instagramRedirectUri;
 
     @Value("${app.social.threads.app-id:${THREADS_APP_ID:${app.threads.app-id:1100121756212184}}}")
@@ -86,10 +86,10 @@ public class SocialMediaServiceImpl implements SocialMediaService {
     @Value("${app.social.threads.app-secret:${THREADS_APP_SECRET:${app.threads.app-secret:a2e05c4f4d61cbdd9a2a27d212e4f049}}}")
     private String threadsAppSecret;
 
-    @Value("${app.social.threads.redirect-uri:https://api.zelvira.my.id/api/v1/social/callback/threads}")
+    @Value("${app.social.threads.redirect-uri:https://api.zelvira.co.id/api/v1/social/callback/threads}")
     private String threadsRedirectUri;
 
-    @Value("${app.social.facebook.redirect-uri:https://api.zelvira.my.id/api/v1/social/callback/facebook}")
+    @Value("${app.social.facebook.redirect-uri:https://api.zelvira.co.id/api/v1/social/callback/facebook}")
     private String facebookRedirectUri;
 
     @Value("${app.social.linkedin.client-id:}")
@@ -98,7 +98,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
     @Value("${app.social.linkedin.client-secret:}")
     private String linkedinClientSecret;
 
-    @Value("${app.social.linkedin.redirect-uri:https://api.zelvira.my.id/api/v1/social/callback/linkedin}")
+    @Value("${app.social.linkedin.redirect-uri:https://api.zelvira.co.id/api/v1/social/callback/linkedin}")
     private String linkedinRedirectUri;
 
     @Value("${app.social.linkedin.organization-id:}")
@@ -110,7 +110,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
     @Value("${app.minio.url:http://minio:9000}")
     private String minioInternalUrl;
 
-    @Value("${app.minio.public-url:https://minio.zelvira.my.id}")
+    @Value("${app.minio.public-url:https://minio.zelvira.co.id}")
     private String minioPublicUrl;
 
     private final MinioClient minioClient;
@@ -121,7 +121,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
     @Value("${app.social.x.client-secret:}")
     private String xClientSecret;
 
-    @Value("${app.social.x.redirect-uri:https://api.zelvira.my.id/api/v1/social/callback/x}")
+    @Value("${app.social.x.redirect-uri:https://api.zelvira.co.id/api/v1/social/callback/x}")
     private String xRedirectUri;
 
     @Value("${app.social.youtube.client-id:}")
@@ -130,10 +130,10 @@ public class SocialMediaServiceImpl implements SocialMediaService {
     @Value("${app.social.youtube.client-secret:}")
     private String youtubeClientSecret;
 
-    @Value("${app.social.youtube.redirect-uri:https://api.zelvira.my.id/api/v1/social/callback/youtube}")
+    @Value("${app.social.youtube.redirect-uri:https://api.zelvira.co.id/api/v1/social/callback/youtube}")
     private String youtubeRedirectUri;
 
-    @Value("${app.social.admin-redirect-url:https://admin.zelvira.my.id/admin/settings?tab=social}")
+    @Value("${app.social.admin-redirect-url:https://admin.zelvira.co.id/admin/settings?tab=social}")
     private String adminSocialConnectUrl;
 
     private final SocialAccountRepository accountRepository;
@@ -284,7 +284,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
         } else if ("LINKEDIN".equals(p) || "LINKEDIN_ORG".equals(p) || "LINKEDIN_BUSINESS".equals(p)) {
             String cleanRedirect = (linkedinRedirectUri != null && !linkedinRedirectUri.isBlank())
                     ? linkedinRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/linkedin";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/linkedin";
             String encodedRedirect = URLEncoder.encode(cleanRedirect, StandardCharsets.UTF_8);
             String id = (linkedinClientId != null && !linkedinClientId.isBlank()) ? linkedinClientId.trim()
                     : "";
@@ -299,7 +299,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
                     id, encodedRedirect, scope);
         } else if ("X".equals(p) || "TWITTER".equals(p)) {
             String cleanRedirect = (xRedirectUri != null && !xRedirectUri.isBlank()) ? xRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/x";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/x";
             String encodedRedirect = URLEncoder.encode(cleanRedirect, StandardCharsets.UTF_8);
             String id = (xClientId != null && !xClientId.isBlank()) ? xClientId.trim()
                     : "";
@@ -309,7 +309,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
         } else if ("FACEBOOK".equals(p)) {
             String cleanRedirect = (facebookRedirectUri != null && !facebookRedirectUri.isBlank())
                     ? facebookRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/facebook";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/facebook";
             String encodedRedirect = URLEncoder.encode(cleanRedirect, StandardCharsets.UTF_8);
             return String.format(
                     "https://www.facebook.com/v21.0/dialog/oauth?client_id=%s&redirect_uri=%s&response_type=code&scope=pages_show_list,pages_read_engagement,pages_manage_posts,public_profile&auth_type=rerequest",
@@ -317,7 +317,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
         } else if ("THREADS".equals(p)) {
             String cleanRedirect = (threadsRedirectUri != null && !threadsRedirectUri.isBlank())
                     ? threadsRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/threads";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/threads";
             String encodedRedirect = URLEncoder.encode(cleanRedirect, StandardCharsets.UTF_8);
             String appId = (threadsAppId != null && !threadsAppId.isBlank()) ? threadsAppId.trim() : "";
             return String.format(
@@ -326,7 +326,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
         } else if ("YOUTUBE".equals(p)) {
             String cleanRedirect = (youtubeRedirectUri != null && !youtubeRedirectUri.isBlank())
                     ? youtubeRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/youtube";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/youtube";
             String encodedRedirect = URLEncoder.encode(cleanRedirect, StandardCharsets.UTF_8);
             String id = (youtubeClientId != null && !youtubeClientId.isBlank())
                     ? youtubeClientId.trim()
@@ -376,7 +376,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
             String tokenUrl = "https://oauth2.googleapis.com/token";
             String cleanRedirect = (youtubeRedirectUri != null && !youtubeRedirectUri.isBlank())
                     ? youtubeRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/youtube";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/youtube";
             String id = (youtubeClientId != null && !youtubeClientId.isBlank())
                     ? youtubeClientId.trim()
                     : "";
@@ -596,7 +596,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
             String tokenUrl = "https://api.twitter.com/2/oauth2/token";
             String cleanRedirect = (xRedirectUri != null && !xRedirectUri.isBlank())
                     ? xRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/x";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/x";
 
             String clientId = (xClientId != null && !xClientId.isBlank())
                     ? xClientId.trim()
@@ -922,7 +922,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
             String tokenUrl = "https://www.linkedin.com/oauth/v2/accessToken";
             String cleanRedirect = (linkedinRedirectUri != null && !linkedinRedirectUri.isBlank())
                     ? linkedinRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/linkedin";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/linkedin";
 
             String clientId = (linkedinClientId != null && !linkedinClientId.isBlank())
                     ? linkedinClientId.trim()
@@ -1059,7 +1059,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
             String tokenUrl = "https://graph.threads.net/oauth/access_token";
             String cleanRedirect = (threadsRedirectUri != null && !threadsRedirectUri.isBlank())
                     ? threadsRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/threads";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/threads";
 
             String appId = (threadsAppId != null && !threadsAppId.isBlank()) ? threadsAppId.trim() : "";
             String appSecret = (threadsAppSecret != null && !threadsAppSecret.isBlank()) ? threadsAppSecret.trim() : "";
@@ -1166,7 +1166,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
             String tokenUrl = "https://graph.facebook.com/v21.0/oauth/access_token";
             String cleanRedirect = (facebookRedirectUri != null && !facebookRedirectUri.isBlank())
                     ? facebookRedirectUri.trim()
-                    : "https://api.zelvira.my.id/api/v1/social/callback/facebook";
+                    : "https://api.zelvira.co.id/api/v1/social/callback/facebook";
 
             String appId = (instagramAppId != null && !instagramAppId.isBlank()) ? instagramAppId.trim() : "";
             String appSecret = (instagramAppSecret != null && !instagramAppSecret.isBlank()) ? instagramAppSecret.trim()
@@ -2037,7 +2037,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
         // Default media fallback if post is text-only (Instagram Graph API strictly
         // requires media)
         if (mediaUrl == null || mediaUrl.isBlank()) {
-            mediaUrl = "https://zelvira.my.id/images/zelixa-logo.png";
+            mediaUrl = "https://zelvira.co.id/images/zelixa-logo.png";
         }
 
         String caption = (post.getTitle() != null && !post.getTitle().isBlank())
@@ -2523,7 +2523,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
 
         String pubBase = (minioPublicUrl != null && !minioPublicUrl.isBlank())
                 ? minioPublicUrl.trim()
-                : "https://minio.zelvira.my.id";
+                : "https://minio.zelvira.co.id";
         if (pubBase.endsWith("/")) {
             pubBase = pubBase.substring(0, pubBase.length() - 1);
         }
@@ -2743,7 +2743,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
             String errMsg = errNode.path("message").asText(resNode.toString());
             if ("url_ownership_unverified".equalsIgnoreCase(errCode)) {
                 throw new RuntimeException(
-                        "TikTok Error (url_ownership_unverified): Domain URL media belum diverifikasi di TikTok Developer Portal (Content Posting API -> Verify domains). Verifikasi URL prefix https://minio.zelvira.my.id/ di portal TikTok atau gunakan media Video agar otomatis memakai FILE_UPLOAD.");
+                        "TikTok Error (url_ownership_unverified): Domain URL media belum diverifikasi di TikTok Developer Portal (Content Posting API -> Verify domains). Verifikasi URL prefix https://minio.zelvira.co.id/ di portal TikTok atau gunakan media Video agar otomatis memakai FILE_UPLOAD.");
             } else if ("unaudited_client_can_only_post_to_private_accounts".equalsIgnoreCase(errCode)) {
                 throw new RuntimeException(
                         "TikTok Error (Sandbox / Unaudited): Aplikasi masih di mode Sandbox / belum diaudit, sehingga TikTok mewajibkan: (1) Privasi 'SELF_ONLY' (sudah dicoba otomatis), DAN (2) Akun TikTok di aplikasi TikTok HP WAJIB diset ke 'Akun Privat / Private Account' (Profil -> Pengaturan dan privasi -> Privasi -> Akun privat). Setelah akun di-set privat, coba posting lagi atau pilih mode 'Draf / Kotak Masuk'.");
@@ -2799,7 +2799,7 @@ public class SocialMediaServiceImpl implements SocialMediaService {
         }
         String pubUrl = (minioPublicUrl != null && !minioPublicUrl.isBlank())
                 ? minioPublicUrl.trim()
-                : "https://minio.zelvira.my.id";
+                : "https://minio.zelvira.co.id";
         if (pubUrl.endsWith("/")) {
             pubUrl = pubUrl.substring(0, pubUrl.length() - 1);
         }
@@ -3194,9 +3194,9 @@ public class SocialMediaServiceImpl implements SocialMediaService {
 
             // Fallback for docker internal network if public domain DNS fails inside
             // container
-            if (imageUrl.contains("minio.zelvira.my.id")) {
+            if (imageUrl.contains("minio.zelvira.co.id")) {
                 try {
-                    String internalUrl = imageUrl.replace("https://minio.zelvira.my.id",
+                    String internalUrl = imageUrl.replace("https://minio.zelvira.co.id",
                             minioInternalUrl.endsWith("/")
                                     ? minioInternalUrl.substring(0, minioInternalUrl.length() - 1)
                                     : minioInternalUrl);

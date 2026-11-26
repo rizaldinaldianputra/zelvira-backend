@@ -18,7 +18,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    @Value("${app.mail.from:${spring.mail.username:noreply@zelvira.my.id}}")
+    @Value("${app.mail.from:${spring.mail.username:noreply@zelvira.co.id}}")
     private String fromEmail;
 
     @Value("${app.mail.sender-name:Zelixa Official}")
@@ -47,9 +47,9 @@ public class EmailService {
             log.error("Failed to send email to {} via SMTP: {}", to, e.getMessage());
             if (e.getMessage() != null && e.getMessage().contains("554")) {
                 log.error(
-                        "[SMTP ERROR 554] Postfix menolak pengiriman karena akun noreply@zelvira.my.id belum terdaftar di SASL/Dovecot docker-mailserver. Jalankan di VPS: docker exec -it zelvira-mailserver setup email add noreply@zelvira.my.id <MAIL_PASSWORD>");
+                        "[SMTP ERROR 554] Postfix menolak pengiriman karena akun noreply@zelvira.co.id belum terdaftar di SASL/Dovecot docker-mailserver. Jalankan di VPS: docker exec -it zelvira-mailserver setup email add noreply@zelvira.co.id <MAIL_PASSWORD>");
                 throw new RuntimeException(
-                        "Gagal mengirim email OTP: Akun email noreply@zelvira.my.id belum terdaftar di docker-mailserver. Silakan jalankan perintah di VPS: docker exec -it zelvira-mailserver setup email add noreply@zelvira.my.id <MAIL_PASSWORD>",
+                        "Gagal mengirim email OTP: Akun email noreply@zelvira.co.id belum terdaftar di docker-mailserver. Silakan jalankan perintah di VPS: docker exec -it zelvira-mailserver setup email add noreply@zelvira.co.id <MAIL_PASSWORD>",
                         e);
             }
             throw new RuntimeException("Gagal mengirim email: " + e.getMessage(), e);

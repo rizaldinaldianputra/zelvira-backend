@@ -18,7 +18,7 @@ public class FileUploadController {
         this.storageService = storageService;
     }
 
-    @org.springframework.beans.factory.annotation.Value("${app.minio.public-url:${app.minio.url:https://minio.zelvira.my.id}}")
+    @org.springframework.beans.factory.annotation.Value("${app.minio.public-url:${app.minio.url:https://minio.zelvira.co.id}}")
     private String storageUrl;
 
     @PostMapping
@@ -36,12 +36,12 @@ public class FileUploadController {
         }
         String cleanPath = path.startsWith("/") ? path : "/" + path;
         String base = storageUrl;
-        if (base.contains("storage.zelvira.my.id")) {
-            base = base.replace("storage.zelvira.my.id", "minio.zelvira.my.id");
-        } else if (base.contains("storage.zelvira.my.id")) {
-            base = base.replace("storage.zelvira.my.id", "minio.zelvira.my.id");
-        } else if (base.contains("minio.zelvira.my.id")) {
-            base = base.replace("minio.zelvira.my.id", "minio.zelvira.my.id");
+        if (base.contains("storage.zelvira.co.id")) {
+            base = base.replace("storage.zelvira.co.id", "minio.zelvira.co.id");
+        } else if (base.contains("storage.zelvira.co.id")) {
+            base = base.replace("storage.zelvira.co.id", "minio.zelvira.co.id");
+        } else if (base.contains("minio.zelvira.co.id")) {
+            base = base.replace("minio.zelvira.co.id", "minio.zelvira.co.id");
         }
         base = base.endsWith("/") ? base.substring(0, base.length() - 1) : base;
         return base + cleanPath;

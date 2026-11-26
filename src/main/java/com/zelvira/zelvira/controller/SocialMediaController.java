@@ -59,7 +59,7 @@ public class SocialMediaController {
         log.info("Social OAuth callback received for {}: code={}, error={}", platform,
                 code != null ? "[PRESENT]" : "NULL", error);
 
-        String adminUrl = "https://admin.zelvira.my.id/admin/settings?tab=social";
+        String adminUrl = "https://admin.zelvira.co.id/admin/settings?tab=social";
         if (socialMediaService instanceof SocialMediaServiceImpl) {
             adminUrl = ((SocialMediaServiceImpl) socialMediaService).getAdminSocialConnectUrl();
         }

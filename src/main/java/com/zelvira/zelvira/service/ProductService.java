@@ -37,7 +37,7 @@ public class ProductService {
 
     private final List<MarketplaceService> marketplaceServices;
 
-    @Value("${app.minio.public-url:${NEXT_PUBLIC_STORAGE_URL:https://minio.zelvira.my.id}}")
+    @Value("${app.minio.public-url:${NEXT_PUBLIC_STORAGE_URL:https://minio.zelvira.co.id}}")
     private String minioPublicUrl;
 
     public ProductService(ProductRepository productRepository, ProductVariantRepository variantRepository,
@@ -590,15 +590,15 @@ public class ProductService {
         String cleanPublicUrl = minioPublicUrl != null && !minioPublicUrl.isBlank()
                 ? (minioPublicUrl.endsWith("/") ? minioPublicUrl.substring(0, minioPublicUrl.length() - 1)
                         : minioPublicUrl)
-                : "https://minio.zelvira.my.id";
+                : "https://minio.zelvira.co.id";
 
         String[] internalEndpoints = new String[] {
                 "http://zelixa-minio:9000",
                 "http://zelvira-minio:9000",
                 "http://minio:9000",
                 "http://localhost:9000",
-                "https://storage.zelvira.my.id",
-                "https://storage.zelvira.my.id"
+                "https://storage.zelvira.co.id",
+                "https://storage.zelvira.co.id"
         };
         for (String endpoint : internalEndpoints) {
             if (url.startsWith(endpoint)) {

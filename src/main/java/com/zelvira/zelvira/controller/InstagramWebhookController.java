@@ -200,7 +200,7 @@ public class InstagramWebhookController {
             @RequestParam(required = false) Map<String, String> queryParams,
             @RequestBody(required = false) String rawBody) {
         String confirmationCode = "del_" + UUID.randomUUID().toString().replace("-", "").substring(0, 16);
-        String statusUrl = "https://api.zelvira.my.id/api/v1/callbacks/meta/data-deletion-status?code=" + confirmationCode;
+        String statusUrl = "https://api.zelvira.co.id/api/v1/callbacks/meta/data-deletion-status?code=" + confirmationCode;
 
         log.info("Received Meta/Threads data deletion callback: code={}, query={}, body={}",
                 confirmationCode, queryParams, rawBody);

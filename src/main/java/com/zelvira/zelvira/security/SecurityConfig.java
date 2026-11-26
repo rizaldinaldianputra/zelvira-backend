@@ -164,11 +164,13 @@ public class SecurityConfig {
                 "http://127.0.0.1:3001",
                 "http://127.0.0.1:3002",
                 "http://127.0.0.1:3003",
-                "https://zelvira.my.id",
-                "https://lawfirm.zelvira.my.id",
-                "https://admin.zelvira.my.id",
-                "https://minio.zelvira.my.id",
-                "https://storage.zelvira.my.id"));
+                "https://zelvira.co.id",
+                "https://lawfirm.zelvira.co.id",
+                "https://admin.zelvira.co.id",
+                "https://admin.zelvira.co.id",
+                "https://zelvira.co.id",
+                "https://minio.zelvira.co.id",
+                "https://storage.zelvira.co.id"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

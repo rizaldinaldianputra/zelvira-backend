@@ -48,10 +48,10 @@ public class InstagramApiServiceImpl implements MarketplaceService {
     @Value("${app.instagram.webhook-verify-token:zelvira_ig_verify_token_2026}")
     private String webhookVerifyToken;
 
-    @Value("${app.instagram.redirect-uri:https://api.zelvira.my.id/api/v1/callbacks/instagram/oauth}")
+    @Value("${app.instagram.redirect-uri:https://api.zelvira.co.id/api/v1/callbacks/instagram/oauth}")
     private String redirectUri;
 
-    @Value("${app.instagram.admin-redirect-url:https://admin.zelvira.my.id/admin/integrations/instagram}")
+    @Value("${app.instagram.admin-redirect-url:https://admin.zelvira.co.id/admin/integrations/instagram}")
     private String adminRedirectUrl;
 
     private final MarketplaceConfigRepository configRepository;

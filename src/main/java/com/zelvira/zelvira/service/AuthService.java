@@ -61,10 +61,10 @@ public class AuthService {
     @Value("${app.google.client-secret:}")
     private String googleClientSecret;
 
-    @Value("${app.google.redirect-uri:https://api.zelvira.my.id/api/v1/auth/google/callback}")
+    @Value("${app.google.redirect-uri:https://api.zelvira.co.id/api/v1/auth/google/callback}")
     private String googleRedirectUri;
 
-    @Value("${app.google.frontend-url:https://zelvira.my.id}")
+    @Value("${app.google.frontend-url:https://zelvira.co.id}")
     private String frontendUrl;
 
     public AuthService(UserRepository userRepository,
@@ -412,7 +412,7 @@ public class AuthService {
     @Transactional
     public String handleGoogleCallback(String code, String state, String error) {
         String defaultFrontend = (frontendUrl != null && !frontendUrl.isBlank()) ? frontendUrl
-                : "https://zelvira.my.id";
+                : "https://zelvira.co.id";
         if (defaultFrontend.endsWith("/")) {
             defaultFrontend = defaultFrontend.substring(0, defaultFrontend.length() - 1);
         }

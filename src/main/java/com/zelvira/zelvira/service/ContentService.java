@@ -30,7 +30,7 @@ public class ContentService {
         this.productService = productService;
     }
 
-    @Value("${app.minio.public-url:${app.minio.url:https://minio.zelvira.my.id}}")
+    @Value("${app.minio.public-url:${app.minio.url:https://minio.zelvira.co.id}}")
     private String storageUrl;
 
     @Transactional
@@ -274,12 +274,12 @@ public class ContentService {
 
         // Clean storage URL base
         String base = storageUrl;
-        if (base.contains("storage.zelvira.my.id")) {
-            base = base.replace("storage.zelvira.my.id", "minio.zelvira.my.id");
-        } else if (base.contains("storage.zelvira.my.id")) {
-            base = base.replace("storage.zelvira.my.id", "minio.zelvira.my.id");
-        } else if (base.contains("minio.zelvira.my.id")) {
-            base = base.replace("minio.zelvira.my.id", "minio.zelvira.my.id");
+        if (base.contains("storage.zelvira.co.id")) {
+            base = base.replace("storage.zelvira.co.id", "minio.zelvira.co.id");
+        } else if (base.contains("storage.zelvira.co.id")) {
+            base = base.replace("storage.zelvira.co.id", "minio.zelvira.co.id");
+        } else if (base.contains("minio.zelvira.co.id")) {
+            base = base.replace("minio.zelvira.co.id", "minio.zelvira.co.id");
         }
         if (base.endsWith("/")) {
             base = base.substring(0, base.length() - 1);
@@ -288,10 +288,10 @@ public class ContentService {
         // Clean up legacy, misconfigured, or internal endpoints if they got into the DB
         String cleanPath = path;
         String[] legacyEndpoints = {
-                "storage.zelvira.my.id:9000",
-                "storage.zelvira.my.id",
-                "storage.zelvira.my.id",
-                "minio.zelvira.my.id",
+                "storage.zelvira.co.id:9000",
+                "storage.zelvira.co.id",
+                "storage.zelvira.co.id",
+                "minio.zelvira.co.id",
                 "zelixa-minio:9000",
                 "zelvira-minio:9000",
                 "minio:9000",

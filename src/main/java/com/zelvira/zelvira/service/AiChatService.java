@@ -41,7 +41,7 @@ public class AiChatService {
     @Value("${app.nvidia.model:nvidia/nemotron-3.5-super-vl-120b-a12b}")
     private String nvidiaModel;
 
-    @Value("${app.google.frontend-url:https://zelvira.my.id}")
+    @Value("${app.google.frontend-url:https://zelvira.co.id}")
     private String frontendUrl;
 
     private final ProductService productService;

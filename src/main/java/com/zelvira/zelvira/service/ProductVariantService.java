@@ -19,7 +19,7 @@ public class ProductVariantService {
     private final ProductVariantRepository productVariantRepository;
     private final ProductRepository productRepository;
 
-    @Value("${app.minio.public-url:${NEXT_PUBLIC_STORAGE_URL:https://minio.zelvira.my.id}}")
+    @Value("${app.minio.public-url:${NEXT_PUBLIC_STORAGE_URL:https://minio.zelvira.co.id}}")
     private String minioPublicUrl;
 
     public ProductVariantService(ProductVariantRepository productVariantRepository,
@@ -145,14 +145,14 @@ public class ProductVariantService {
         String cleanPublicUrl = minioPublicUrl != null && !minioPublicUrl.isBlank()
                 ? (minioPublicUrl.endsWith("/") ? minioPublicUrl.substring(0, minioPublicUrl.length() - 1)
                         : minioPublicUrl)
-                : "https://minio.zelvira.my.id";
+                : "https://minio.zelvira.co.id";
 
         String[] internalEndpoints = new String[] {
                 "http://zelixa-minio:9000",
                 "http://zelvira-minio:9000",
                 "http://minio:9000",
                 "http://localhost:9000",
-                "https://storage.zelvira.my.id"
+                "https://storage.zelvira.co.id"
         };
         for (String endpoint : internalEndpoints) {
             if (url.startsWith(endpoint)) {

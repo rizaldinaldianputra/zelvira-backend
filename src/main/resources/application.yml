@@ -1,5 +1,6 @@
 server:
   port: 8081
+  forward-headers-strategy: framework
 
 management:
   endpoint:
@@ -58,9 +59,9 @@ spring:
 
 
   mail:
-    host: ${MAIL_HOST:mail.zelvira.my.id}
+    host: ${MAIL_HOST:mail.zelvira.co.id}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:noreply@zelvira.my.id}
+    username: ${MAIL_USERNAME:noreply@zelvira.co.id}
     password: ${MAIL_PASSWORD:}
     properties:
       mail:
@@ -70,17 +71,17 @@ spring:
             enable: true
             required: true
           ssl:
-            trust: ${MAIL_SMTP_SSL_TRUST:mail.zelvira.my.id}
+            trust: ${MAIL_SMTP_SSL_TRUST:mail.zelvira.co.id}
           connectiontimeout: 10000
           timeout: 10000
           writetimeout: 10000
 app:
   mail:
-    from: ${MAIL_FROM:noreply@zelvira.my.id}
+    from: ${MAIL_FROM:noreply@zelvira.co.id}
     sender-name: ${MAIL_SENDER_NAME:Zelixa Official}
   minio:
     url: ${MINIO_ENDPOINT:${MINIO_URL:http://localhost:9000}}
-    public-url: ${MINIO_PUBLIC_URL:${NEXT_PUBLIC_STORAGE_URL:https://minio.zelvira.my.id}}
+    public-url: ${MINIO_PUBLIC_URL:${NEXT_PUBLIC_STORAGE_URL:https://minio.zelvira.co.id}}
     access-key: ${MINIO_ACCESS_KEY:minioadmin}
     secret-key: ${MINIO_SECRET_KEY:minioadmin}
     bucket: ${MINIO_BUCKET:zelixa-bucket}
@@ -88,8 +89,8 @@ app:
   google:
     client-id: ${GOOGLE_CLIENT_ID:}
     client-secret: ${GOOGLE_CLIENT_SECRET:}
-    redirect-uri: ${GOOGLE_REDIRECT_URI:https://api.zelvira.my.id/api/v1/auth/google/callback}
-    frontend-url: ${NEXT_PUBLIC_WEB_URL:https://zelvira.my.id}
+    redirect-uri: ${GOOGLE_REDIRECT_URI:https://api.zelvira.co.id/api/v1/auth/google/callback}
+    frontend-url: ${NEXT_PUBLIC_WEB_URL:https://zelvira.co.id}
 
   rajaongkir:
     api-key: ${RAJAONGKIR_API_KEY:}
@@ -135,41 +136,41 @@ app:
     account-id: ${INSTAGRAM_ACCOUNT_ID:}
     account-username: ${INSTAGRAM_ACCOUNT_USERNAME:zelviraofficialstore}
     webhook-verify-token: ${INSTAGRAM_WEBHOOK_VERIFY_TOKEN:zelvira_ig_verify_token_2026}
-    redirect-uri: ${INSTAGRAM_REDIRECT_URI:https://api.zelvira.my.id/api/v1/callbacks/instagram/oauth}
-    admin-redirect-url: ${NEXT_PUBLIC_ADMIN_URL:https://admin.zelvira.my.id}/admin/integrations/instagram
+    redirect-uri: ${INSTAGRAM_REDIRECT_URI:https://api.zelvira.co.id/api/v1/callbacks/instagram/oauth}
+    admin-redirect-url: ${NEXT_PUBLIC_ADMIN_URL:https://admin.zelvira.co.id}/admin/integrations/instagram
 
   threads:
     app-id: ${THREADS_APP_ID:1100121756212184}
     app-secret: ${THREADS_APP_SECRET:a2e05c4f4d61cbdd9a2a27d212e4f049}
-    redirect-uri: ${THREADS_REDIRECT_URI:https://api.zelvira.my.id/api/v1/social/callback/threads}
+    redirect-uri: ${THREADS_REDIRECT_URI:https://api.zelvira.co.id/api/v1/social/callback/threads}
 
   social:
     tiktok:
       client-key: ${TIKTOK_SOCIAL_CLIENT_KEY:sbawknsk6eooabz8hq}
       client-secret: ${TIKTOK_SOCIAL_CLIENT_SECRET:7wWIblGTNxGUS0OoC01HdMd6pETdEt1g}
-      redirect-uri: ${TIKTOK_SOCIAL_REDIRECT_URI:https://api.zelvira.my.id/api/v1/social/callback/tiktok}
+      redirect-uri: ${TIKTOK_SOCIAL_REDIRECT_URI:https://api.zelvira.co.id/api/v1/social/callback/tiktok}
     instagram:
-      redirect-uri: ${INSTAGRAM_SOCIAL_REDIRECT_URI:https://api.zelvira.my.id/api/v1/social/callback/instagram}
+      redirect-uri: ${INSTAGRAM_SOCIAL_REDIRECT_URI:https://api.zelvira.co.id/api/v1/social/callback/instagram}
     threads:
       app-id: ${THREADS_APP_ID:1100121756212184}
       app-secret: ${THREADS_APP_SECRET:a2e05c4f4d61cbdd9a2a27d212e4f049}
-      redirect-uri: ${THREADS_REDIRECT_URI:https://api.zelvira.my.id/api/v1/social/callback/threads}
+      redirect-uri: ${THREADS_REDIRECT_URI:https://api.zelvira.co.id/api/v1/social/callback/threads}
     facebook:
-      redirect-uri: ${FACEBOOK_REDIRECT_URI:https://api.zelvira.my.id/api/v1/social/callback/facebook}
+      redirect-uri: ${FACEBOOK_REDIRECT_URI:https://api.zelvira.co.id/api/v1/social/callback/facebook}
     linkedin:
       client-id: ${LINKEDIN_CLIENT_ID:}
       client-secret: ${LINKEDIN_CLIENT_SECRET:}
       organization-id: ${LINKEDIN_ORGANIZATION_ID:}
-      redirect-uri: ${LINKEDIN_REDIRECT_URI:https://api.zelvira.my.id/api/v1/social/callback/linkedin}
+      redirect-uri: ${LINKEDIN_REDIRECT_URI:https://api.zelvira.co.id/api/v1/social/callback/linkedin}
     x:
       client-id: ${X_CLIENT_ID:}
       client-secret: ${X_CLIENT_SECRET:}
-      redirect-uri: ${X_REDIRECT_URI:https://api.zelvira.my.id/api/v1/social/callback/x}
+      redirect-uri: ${X_REDIRECT_URI:https://api.zelvira.co.id/api/v1/social/callback/x}
     youtube:
       client-id: ${YOUTUBE_CLIENT_ID:${GOOGLE_CLIENT_ID:}}
       client-secret: ${YOUTUBE_CLIENT_SECRET:${GOOGLE_CLIENT_SECRET:}}
-      redirect-uri: ${YOUTUBE_REDIRECT_URI:https://api.zelvira.my.id/api/v1/social/callback/youtube}
-    admin-redirect-url: ${NEXT_PUBLIC_ADMIN_URL:https://admin.zelvira.my.id}/admin/settings?tab=social
+      redirect-uri: ${YOUTUBE_REDIRECT_URI:https://api.zelvira.co.id/api/v1/social/callback/youtube}
+    admin-redirect-url: ${NEXT_PUBLIC_ADMIN_URL:https://admin.zelvira.co.id}/admin/settings?tab=social
 
   nvidia:
     api-key: ${NVIDIA_API_KEY:}
