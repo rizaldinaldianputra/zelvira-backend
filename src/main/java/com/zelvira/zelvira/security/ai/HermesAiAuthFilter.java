@@ -2,6 +2,12 @@ package com.zelvira.zelvira.security.ai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zelvira.zelvira.dto.ai.AiApiResponse;
+import com.zelvira.zelvira.entity.AiAgent;
+import com.zelvira.zelvira.entity.AiApiKey;
+import com.zelvira.zelvira.entity.AiAuditLog;
+import com.zelvira.zelvira.repository.AiAgentRepository;
+import com.zelvira.zelvira.repository.AiApiKeyRepository;
+import com.zelvira.zelvira.repository.AiAuditLogRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +39,10 @@ public class HermesAiAuthFilter extends OncePerRequestFilter {
     public static final String ATTR_AI_PROFILE = "HERMES_AI_PROFILE";
 
     private final ObjectMapper objectMapper;
+    private final AiApiKeyRepository apiKeyRepository;
+    private final AiAgentRepository agentRepository;
+    private final AiAuditLogRepository auditLogRepository;
+    private final AiKeyGenerator keyGenerator;
 
     @Value("${app.ai.hermes.ceo-key:${HERMES_CEO_API_KEY:}}")
     private String ceoKey;
@@ -57,8 +67,17 @@ public class HermesAiAuthFilter extends OncePerRequestFilter {
 
     private final Map<String, Deque<Long>> rateLimitBuckets = new ConcurrentHashMap<>();
 
-    public HermesAiAuthFilter(ObjectMapper objectMapper) {
+    public HermesAiAuthFilter(
+            ObjectMapper objectMapper,
+            AiApiKeyRepository apiKeyRepository,
+            AiAgentRepository agentRepository,
+            AiAuditLogRepository auditLogRepository,
+            AiKeyGenerator keyGenerator) {
         this.objectMapper = objectMapper;
+        this.apiKeyRepository = apiKeyRepository;
+        this.agentRepository = agentRepository;
+        this.auditLogRepository = auditLogRepository;
+        this.keyGenerator = keyGenerator;
     }
 
     @Override
@@ -122,6 +141,17 @@ public class HermesAiAuthFilter extends OncePerRequestFilter {
             log.info("[HERMES-AI-AUDIT] profile={} | method={} | path={} | query={} | status={} | durationMs={} | ip={}",
                     resolvedProfile.getId(), request.getMethod(), request.getRequestURI(),
                     request.getQueryString(), response.getStatus(), durationMs, request.getRemoteAddr());
+            try {
+                auditLogRepository.save(AiAuditLog.builder()
+                        .agentId(resolvedProfile.getId())
+                        .endpoint(request.getRequestURI())
+                        .httpMethod(request.getMethod())
+                        .responseStatus(response.getStatus())
+                        .ipAddress(request.getRemoteAddr())
+                        .durationMs(durationMs)
+                        .build());
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -138,6 +168,30 @@ public class HermesAiAuthFilter extends OncePerRequestFilter {
     }
 
     private AiProfile resolveProfile(String apiKey, String profileHeader) {
+        try {
+            String hash = keyGenerator.hashToken(apiKey);
+            var dbKeyOpt = apiKeyRepository.findByTokenHashWithAgent(hash);
+            if (dbKeyOpt.isPresent()) {
+                AiApiKey dbKey = dbKeyOpt.get();
+                AiAgent agent = dbKey.getAgent();
+                if (!Boolean.TRUE.equals(dbKey.getIsActive()) || dbKey.getRevokedAt() != null
+                        || agent == null || !Boolean.TRUE.equals(agent.getIsActive())) {
+                    return null;
+                }
+                if (profileHeader != null && !profileHeader.isBlank()
+                        && !agent.getAgentId().equalsIgnoreCase(profileHeader.trim())) {
+                    return null; // Prevent one agent from impersonating another
+                }
+                java.time.LocalDateTime now = java.time.LocalDateTime.now();
+                dbKey.setLastUsedAt(now);
+                agent.setLastUsedAt(now);
+                apiKeyRepository.save(dbKey);
+                agentRepository.save(agent);
+                return AiProfile.fromId(agent.getAgentId());
+            }
+        } catch (Exception ignored) {
+        }
+
         if (constantTimeEquals(apiKey, ceoKey)) return AiProfile.HERMES_CEO;
         if (constantTimeEquals(apiKey, contentKey)) return AiProfile.HERMES_CONTENT;
         if (constantTimeEquals(apiKey, marketingKey)) return AiProfile.HERMES_MARKETING;
