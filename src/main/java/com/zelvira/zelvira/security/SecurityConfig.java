@@ -1,5 +1,6 @@
 package com.zelvira.zelvira.security;
 
+import com.zelvira.zelvira.security.ai.HermesAiAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,13 +26,16 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final HermesAiAuthFilter hermesAiAuthFilter;
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,
+            HermesAiAuthFilter hermesAiAuthFilter,
             UserDetailsService userDetailsService,
             PasswordEncoder passwordEncoder) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.hermesAiAuthFilter = hermesAiAuthFilter;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -136,6 +140,9 @@ public class SecurityConfig {
                                 "/api/vouchers/code/**")
                         .permitAll()
 
+                        // 4b. Hermes AI Integration API (authenticated by HermesAiAuthFilter)
+                        .requestMatchers("/api/v1/ai/**").hasRole("HERMES_AI")
+
                         // 5. All other endpoints (including all admin & user mutations) require authentication
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptions -> exceptions
@@ -147,6 +154,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
+                .addFilterBefore(hermesAiAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
