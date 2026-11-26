@@ -12,7 +12,7 @@ services:
     environment:
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx768m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
       DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-zelvira}
-      DB_USERNAME: ${POSTGRES_USER:-rizaldi}
+      DB_USERNAME: ${POSTGRES_USER:-zelvira}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-zelvira}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-rizaldi}
